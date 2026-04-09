@@ -1,6 +1,5 @@
 package io.github.robwin.service;
 
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.util.concurrent.CompletableFuture;
@@ -15,12 +14,6 @@ public interface Service {
     String successException();
 
     String ignoreException();
-
-    Flux<String> fluxSuccess();
-
-    Flux<String> fluxFailure();
-
-    Flux<String> fluxTimeout();
 
     Mono<String> monoSuccess();
 

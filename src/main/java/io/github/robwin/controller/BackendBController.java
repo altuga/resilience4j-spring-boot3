@@ -20,7 +20,6 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.util.concurrent.CompletableFuture;
@@ -96,24 +95,9 @@ public class BackendBController {
         return execute(businessBService.monoFailure());
     }
 
-    @GetMapping("fluxSuccess")
-    public Flux<String> fluxSuccess(){
-        return execute(businessBService.fluxFailure());
-    }
-
-    @GetMapping("fluxFailure")
-    public Flux<String> fluxFailure(){
-        return execute(businessBService.fluxFailure());
-    }
-
     @GetMapping("monoTimeout")
     public Mono<String> monoTimeout(){
         return executeWithFallback(businessBService.monoTimeout(), this::monoFallback);
-    }
-
-    @GetMapping("fluxTimeout")
-    public Flux<String> fluxTimeout(){
-        return executeWithFallback(businessBService.fluxTimeout(), this::fluxFallback);
     }
 
     @GetMapping("futureFailure")
@@ -152,25 +136,7 @@ public class BackendBController {
                 .transform(RetryOperator.of(retry));
     }
 
-    private <T> Flux<T> execute(Flux<T> publisher){
-        return publisher
-                .transform(BulkheadOperator.of(bulkhead))
-                .transform(CircuitBreakerOperator.of(circuitBreaker))
-                .transform(RetryOperator.of(retry));
-    }
-
-
     private <T> Mono<T> executeWithFallback(Mono<T> publisher, Function<Throwable, Mono<T>> fallback){
-        return publisher
-                .transform(TimeLimiterOperator.of(timeLimiter))
-                .transform(BulkheadOperator.of(bulkhead))
-                .transform(CircuitBreakerOperator.of(circuitBreaker))
-                .onErrorResume(TimeoutException.class, fallback)
-                .onErrorResume(CallNotPermittedException.class, fallback)
-                .onErrorResume(BulkheadFullException.class, fallback);
-    }
-
-    private <T> Flux<T> executeWithFallback(Flux<T> publisher, Function<Throwable, Flux<T>> fallback){
         return publisher
                 .transform(TimeLimiterOperator.of(timeLimiter))
                 .transform(BulkheadOperator.of(bulkhead))
@@ -213,9 +179,5 @@ public class BackendBController {
 
     private Mono<String> monoFallback(Throwable ex) {
         return Mono.just("Recovered: " + ex.toString());
-    }
-
-    private Flux<String> fluxFallback(Throwable ex) {
-        return Flux.just("Recovered: " + ex.toString());
     }
 }

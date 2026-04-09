@@ -13,7 +13,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.HttpServerErrorException;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.io.IOException;
@@ -58,22 +57,7 @@ public class BackendCService implements Service {
         throw new HttpClientErrorException(HttpStatus.BAD_REQUEST, "This is a remote client exception");
     }
 
-    @Override
-    @CircuitBreaker(name = BACKEND_C)
-    @Bulkhead(name = BACKEND_C)
-    @Retry(name = BACKEND_C)
-    public Flux<String> fluxFailure() {
-        return Flux.error(new IOException("BAM!"));
-    }
 
-    @Override
-    @TimeLimiter(name = BACKEND_C)
-    @CircuitBreaker(name = BACKEND_C, fallbackMethod = "fluxFallback")
-    public Flux<String> fluxTimeout() {
-        return Flux.
-                just("Hello World from backend A")
-                .delayElements(Duration.ofSeconds(10));
-    }
 
     @Override
     @TimeLimiter(name = BACKEND_C)
@@ -101,13 +85,7 @@ public class BackendCService implements Service {
                 .delayElement(Duration.ofSeconds(10));
     }
 
-    @Override
-    @TimeLimiter(name = BACKEND_C)
-    @CircuitBreaker(name = BACKEND_C)
-    @Retry(name = BACKEND_C)
-    public Flux<String> fluxSuccess() {
-        return Flux.just("Hello", "World");
-    }
+
 
     @Override
     @CircuitBreaker(name = BACKEND_C, fallbackMethod = "fallback")
@@ -166,9 +144,5 @@ public class BackendCService implements Service {
 
     private Mono<String> monoFallback(Exception ex) {
         return Mono.just("Recovered: " + ex.toString());
-    }
-
-    private Flux<String> fluxFallback(Exception ex) {
-        return Flux.just("Recovered: " + ex.toString());
     }
 }

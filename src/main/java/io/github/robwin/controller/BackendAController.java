@@ -5,7 +5,6 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.util.concurrent.CompletableFuture;
@@ -50,19 +49,9 @@ public class BackendAController {
         return businessAService.monoFailure();
     }
 
-    @GetMapping("fluxSuccess")
-    public Flux<String> fluxSuccess(){
-        return businessAService.fluxSuccess();
-    }
-
     @GetMapping("monoTimeout")
     public Mono<String> monoTimeout(){
         return businessAService.monoTimeout();
-    }
-
-    @GetMapping("fluxTimeout")
-    public Flux<String> fluxTimeout(){
-        return businessAService.fluxTimeout();
     }
 
     @GetMapping("futureFailure")
@@ -78,11 +67,6 @@ public class BackendAController {
     @GetMapping("futureTimeout")
     public CompletableFuture<String> futureTimeout(){
         return businessAService.futureTimeout();
-    }
-
-    @GetMapping("fluxFailure")
-    public Flux<String> fluxFailure(){
-        return businessAService.fluxFailure();
     }
 
     @GetMapping("fallback")

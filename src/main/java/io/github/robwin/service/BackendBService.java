@@ -8,7 +8,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.HttpServerErrorException;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.io.IOException;
@@ -40,17 +39,7 @@ public class BackendBService implements Service {
         throw new BusinessException("This exception is ignored by the CircuitBreaker of backend B");
     }
 
-    @Override
-    @Bulkhead(name = "backendB")
-    public Flux<String> fluxFailure() {
-        return Flux.error(new IOException("BAM!"));
-    }
 
-    @Override
-    public Flux<String> fluxTimeout() {
-        return Flux.just("Hello World from backend B")
-                .delayElements(Duration.ofSeconds(10));
-    }
 
     @Override
     public Mono<String> monoSuccess() {
@@ -68,10 +57,7 @@ public class BackendBService implements Service {
                 .delayElement(Duration.ofSeconds(10));
     }
 
-    @Override
-    public Flux<String> fluxSuccess() {
-        return Flux.just("Hello", "World");
-    }
+
 
     @Override
     public CompletableFuture<String> futureSuccess() {
