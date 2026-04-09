@@ -1,8 +1,5 @@
 # Spring Boot 3 demo of Resilience4j
 
-![Gradle Wrapper Status](https://github.com/resilience4j/resilience4j-spring-boot2-demo/actions/workflows/gradle-wrapper-validation.yml/badge.svg)
-![Build Status](https://github.com/resilience4j/resilience4j-spring-boot2-demo/actions/workflows/gradle-build.yml/badge.svg)
-
 This demo shows how to use the fault tolerance library [Resilience4j](https://github.com/resilience4j/resilience4j) in a Spring Boot 3 application.
 
 See [User Guide](https://resilience4j.readme.io/docs/getting-started-3) for more details.
@@ -17,7 +14,7 @@ The [BackendBController](https://github.com/resilience4j/resilience4j-spring-boo
 
 Just run the Application.java in your IDE.
 
-or `./gradlew bootrun`
+or `mvn spring-boot:run`
 
 Application is running on http://localhost:9080.
 
@@ -50,12 +47,3 @@ Configure the Grafana.
     - Import dashboard
     - Upload dashboard.json from /docker
 
-## License
-
-Copyright 2019 Robert Winkler
-
-Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at
-
-    http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
